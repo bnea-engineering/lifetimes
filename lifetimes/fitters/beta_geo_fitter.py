@@ -148,9 +148,14 @@ class BetaGeoFitter(BaseFitter):
 
         self.data = pd.DataFrame({"frequency": frequency, "recency": recency, "T": T, "weights": weights}, index=index)
 
-        self.generate_new_data = lambda size=1: beta_geometric_nbd_model(
-            T, *self._unload_params("r", "alpha", "a", "b"), size=size
-        )
+        # self.generate_new_data = lambda size=1: beta_geometric_nbd_model(
+        #     T, *self._unload_params("r", "alpha", "a", "b"), size=size
+        # )
+        def _generate_new_data_fn(size=1):
+            return beta_geometric_nbd_model(
+                T, *self._unload_params("r", "alpha", "a", "b"), size=size
+            )
+        self.generate_new_data = _generate_new_data_fn
 
         self.predict = self.conditional_expected_number_of_purchases_up_to_time
 
