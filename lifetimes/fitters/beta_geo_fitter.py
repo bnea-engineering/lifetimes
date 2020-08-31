@@ -151,11 +151,16 @@ class BetaGeoFitter(BaseFitter):
         # self.generate_new_data = lambda size=1: beta_geometric_nbd_model(
         #     T, *self._unload_params("r", "alpha", "a", "b"), size=size
         # )
-        def _generate_new_data_fn(size=1):
-            return beta_geometric_nbd_model(
-                T, *self._unload_params("r", "alpha", "a", "b"), size=size
-            )
-        self.generate_new_data = _generate_new_data_fn
+
+        # def _generate_new_data_fn(size=1):
+        #     return beta_geometric_nbd_model(
+        #         T, *self._unload_params("r", "alpha", "a", "b"), size=size
+        #     )
+        # self.generate_new_data = _generate_new_data_fn
+
+        from functools import partial
+
+        self.generate_new_data = partial(beta_geometric_nbd_model, T, *self._unload_params("r", "alpha", "a", "b"), size=1)
 
         self.predict = self.conditional_expected_number_of_purchases_up_to_time
 
