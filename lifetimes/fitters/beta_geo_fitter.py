@@ -4,6 +4,7 @@
 from __future__ import print_function
 from __future__ import division
 import warnings
+from functools import partial
 
 import pandas as pd
 import autograd.numpy as np
@@ -147,18 +148,6 @@ class BetaGeoFitter(BaseFitter):
         self.params_["alpha"] /= self._scale
 
         self.data = pd.DataFrame({"frequency": frequency, "recency": recency, "T": T, "weights": weights}, index=index)
-
-        # self.generate_new_data = lambda size=1: beta_geometric_nbd_model(
-        #     T, *self._unload_params("r", "alpha", "a", "b"), size=size
-        # )
-
-        # def _generate_new_data_fn(size=1):
-        #     return beta_geometric_nbd_model(
-        #         T, *self._unload_params("r", "alpha", "a", "b"), size=size
-        #     )
-        # self.generate_new_data = _generate_new_data_fn
-
-        from functools import partial
 
         self.generate_new_data = partial(beta_geometric_nbd_model, T, *self._unload_params("r", "alpha", "a", "b"), size=1)
 
